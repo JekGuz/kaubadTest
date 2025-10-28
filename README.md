@@ -213,6 +213,49 @@ Aga `.env.example` on lisatud, et näidata, milliseid keskkonnaandmeid võiks / 
   See tähendab, et testid räägivad elava andmebaasiga.  
   Sellepärast testid EI tee tegelikku `Lisa kaup` ega `Kustuta` tegevust (see rikuks andmeid ja muudaks järgmiste testide tulemust).
 
+
+## 6. Märkused ja piirangud (sh CRUD test 07_admin_lisa_ja_kustuta.spec.ts)
+
+- **Loginivormi eeldused**  
+  Testid eeldavad, et loginivormis on väljad:
+  - `#login` (kasutajanimi)
+  - `#password` (parool)
+  - sisselogimisnupp on kas `button` tekstiga **"Logi sisse"** või `input[type="submit"][value="Logi sisse"]`.
+
+- **Adminivaate tekst**  
+  Pärast sisselogimist eeldatakse ülaosas tervitust **"Tere, admin!"**.  
+  Kui tekst muutub (nt **"Tere, administraator!"**), tuleb vastav kontroll uuendada.
+
+- **Serveri olek ja elav andmebaas**  
+  Rakendus jookseb reaalsel serveril. Testid räägivad päris andmebaasiga.
+
+- **CRUD test muudab andmeid, kuid teeb puhastuse**  
+  Fail **`07_admin_lisa_ja_kustuta.spec.ts`** lisab 3 ajutist kaupa (unikaalse prefiksiga `autotest_<timestamp>`) ja **kustutab need kohe**.  
+  See tähendab:
+  - Tavaliselt **ei jää** testandmeid alles.  
+  - Kui kustutamine ebaõnnestub (nt õigus/veakood/confirm-blokeering), **võib ajutine rida jääda**.  
+    Sel juhul tuleks test uuesti käivitada või rida käsitsi eemaldada.
+
+- **Vormi ja tabeli struktuuri eeldused (CRUD)**  
+  - Lisamisvorm on `form[action="kaubahaldus.php"]` väljadega `#nimetus`, `select[name="kaubagrupi_id"]`, `#hind`, nupp **"Lisa kaup"**:  
+    `input[type="submit"][name="kaubalisamine"][value="Lisa kaup"]`.  
+  - Tabelis on uued read nähtavad samal lehel pärast submit’i (ilma eraldi navigeerimiseta).  
+  - Igal kaubareal on link **"Kustuta"**; kustutamisel võib avaneda `confirm` dialoog (test aktsepteerib selle automaatselt).
+
+- **Valikute väärtused**  
+  CRUD test valib kaubagrupi väärtused `'1'`, `'2'`, `'3'`. Kui väärtused muutuvad või gruppe pole, tuleb test kohandada.
+
+- **Lokaatorite stabiilsus ja lokaliseerimine**  
+  Kontrollid kasutavad ID-sid, `getByRole` ja täpseid tekste. Tekstide muutumisel (nt nuppude/pealkirjade tõlge) tuleb test uuendada.
+
+- **Keskkonnamuutujad**  
+  Soovitav on hoida **`LOGIN_URL`**, `ADMIN_USER`, `ADMIN_PASS` `.env` failis (näidis: `.env.example`).  
+  Testid kasutavad neid väärtusi, kui need on saadaval.
+
+- **Soovitus CI jaoks**  
+  Kuna CRUD muudab andmeid, võib selle jooksutada eraldi (nt tag’iga `@crud`) või hoida eraldi käsusammuna, et vältida paralleeltöö põhjustatud konflikte.
+
+
 - Kui PowerShell Windowsis blokib `npm` või `npx` (ExecutionPolicy / allkirjastamata skriptid), siis alati võib kasutada cmd-vormi:
   ```bash
   cmd /c npx playwright test --ui

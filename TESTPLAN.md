@@ -106,6 +106,17 @@ Fail: `test/06_admin_vaade.spec.ts`
 Test: `admini vaade: tabel, vorm ja halduslingid`
 
 
+## Stsenaarium 7:Admin lisab ja kustutab kaubad (CRUD)
+
+**Algseis:** Admin on edukalt sisse loginud ja näeb haldusvaadet.
+**Tegevus:** Admin lisab kolm ajutist kaupa (unikaalse nimega `autotest_<aeg>`) ja kontrollib, et need ilmuvad tabelisse. Seejärel kustutab samad read linkidega Kustuta, kinnitades eemaldamise.
+**Ootus:** Kõik lisatud read ilmuvad tabelisse ja kaovad pärast kustutamist. Test puhastab andmed automaatselt, ajutisi ridu ei jää.
+
+(Miks oluline: kinnitab, et andmete lisamine ja kustutamine töötab õigesti ning admin saab haldada kaubaandmeid.)
+
+Fail: `test/07_admin_lisa_ja_kustuta.spec.ts`
+Test: `admin lisab ja kustutab kaubad (CRUD)`
+
 ---
 
 ## Failid ja struktuur
@@ -116,17 +127,21 @@ Test: `admini vaade: tabel, vorm ja halduslingid`
 - `test/04_opilane_logout.spec.ts`  
 - `test/05_admin_logout.spec.ts`  
 - `test/06_admin_vaade.spec.ts`
+- `test/07_admin_lisa_ja_kustuta.spec.ts`
 
 Iga testifail sisaldab:
-- Lühikirjeldus kolmes osas (Algseis / Tegevus / Ootus).
-- Ühte iseseisvat stsenaariumi.
-- Sisenemine (login) tehakse testis sees; test ei sõltu eelnevast testist.
 
-> Märkus enda jaoks / Историческое примечание:
-> Alguses kõik testid olid koos failis `auth.spec.ts`, ühe suure plokina.
-> Nüüd nad on eraldi failides vastavalt nõudele: "Minimum viis sõltumatut stsenaariumi, igaüks eraldi failis."
+Lühikirjeldus kolmes osas (Algseis / Tegevus / Ootus).
+
+Ühte iseseisvat stsenaariumi.
+
+Sisenemine (login) tehakse testis sees; test ei sõltu eelnevast testist.
+
+CRUD-test loob ja kustutab ajutised andmed testilõpus automaatselt.
+
+Märkus enda jaoks
+Alguses kõik testid olid koos failis `auth.spec.ts`, ühe suure plokina.
+Nüüd nad on eraldi failides vastavalt nõudele:
+"Minimum viis sõltumatut stsenaariumi, igaüks eraldi failis."
 
 See vastab nõudele, et testid oleks korduvkäidavad, isoleeritud ja loetavad.
-
-
----
